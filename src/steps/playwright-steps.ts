@@ -7,10 +7,10 @@ let homePage: PlaywrightHomePage;
 
 Given("Playwright Homepage Is Opened", async function (this: ICustomWorld) {
   homePage = new PlaywrightHomePage(this);
+  await homePage.open();
 });
 
 Given("Theme Is Set To {string} mode", async function (theme: Theme) {
-  await homePage.open();
   await homePage.setLocalStorage("theme", theme);
 });
 

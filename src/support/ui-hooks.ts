@@ -10,7 +10,7 @@ Before({ tags: "@ui" }, async function (this: ICustomWorld) {
   this.page = await this.context.newPage();
 });
 
-After(async function (this: ICustomWorld) {
+After({ tags: "@ui" }, async function (this: ICustomWorld) {
   await this.page?.close();
   await this.context?.close();
 });
@@ -21,6 +21,9 @@ AfterAll(async function () {
   }
 });
 
+/**
+ * Reuse browser instance across features and only initialize it on first call.
+ */
 async function initBrowser() {
   if (browser == undefined) {
     switch (process.env.BROWSER) {
