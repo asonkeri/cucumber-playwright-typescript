@@ -1,24 +1,26 @@
+import { Given, Then, When } from "@cucumber/cucumber";
+import { PlaywrightHomePage } from "../pages/playwright-home-page";
 import { ICustomWorld } from "../support/custom-world";
-import { Given, When, Then } from "@cucumber/cucumber";
 
 type Theme = "light" | "dark";
+let homePage: PlaywrightHomePage;
+
+Given("Playwright Homepage Is Opened", async function (this: ICustomWorld) {
+  homePage = new PlaywrightHomePage(this);
+});
 
 Given("Theme Is Set To {string} mode", async function (theme: Theme) {
-  const { page } = this as ICustomWorld;
-  await page?.goto("https://playwright.dev");
-  await page?.evaluate(`window.localStorage.setItem('theme','${theme}')`);
-  await page?.reload();
+  await homePage.open();
+  await homePage.setLocalStorage("theme", theme);
 });
 
 When("Change theme to {string} mode", async function (theme: Theme) {
-  const { page } = this as ICustomWorld;
-  const currentTheme = await page?.getAttribute("html", "data-theme");
+  const currentTheme = await homePage.getTheme();
   if (currentTheme != theme) {
-    await page?.click('nav >> div[role="button"]');
+    await homePage.toggleTheme();
   }
 });
 
-Then("We See {string} mode", async function (theme: Theme) {
-  const { page } = this as ICustomWorld;
-  await page?.waitForSelector(`xpath=html[@data-theme='${theme}']`);
+Then("We See {string} mode", async function (this: ICustomWorld, theme: Theme) {
+  await homePage.shouldHaveTheme(theme);
 });

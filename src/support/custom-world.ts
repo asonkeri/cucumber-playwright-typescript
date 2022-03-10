@@ -1,5 +1,5 @@
-import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
-import { BrowserContext, Page } from 'playwright';
+import { IWorldOptions, setWorldConstructor, World } from "@cucumber/cucumber";
+import { BrowserContext, Page } from "playwright";
 
 export interface ICustomWorld extends World {
   debug: boolean;
@@ -8,10 +8,11 @@ export interface ICustomWorld extends World {
 }
 
 export class CustomWorld extends World implements ICustomWorld {
+  debug = false;
+
   constructor(options: IWorldOptions) {
     super(options);
   }
-  debug = false;
 }
 
 setWorldConstructor(CustomWorld);
